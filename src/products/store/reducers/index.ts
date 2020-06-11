@@ -5,6 +5,7 @@ import {
 } from "@ngrx/store";
 
 import * as fromPizzas from "./pizzas.reducer";
+import { parse } from "querystring";
 
 export interface ProductsState {
   pizzas: fromPizzas.PizzaState;
@@ -26,11 +27,21 @@ export const getPizzaState = createSelector(
   (state: ProductsState) => state.pizzas // 2nd level of the state tree and return that product
 );
 
-export const getAllPizzas = createSelector(getPizzaState, fromPizzas.getPizzas);
+export const getPizzasEntities = createSelector(
+  getPizzaState,
+  fromPizzas.getPizzasEntities // returns objects not array value
+);
+
+// return an array so component can loop over
+export const getAllPizzas = createSelector(getPizzasEntities, (entities) => {
+  return Object.keys(entities).map((id) => entities[parseInt(id, 10)]);
+});
+
 export const getPizzasLoaded = createSelector(
   getPizzaState,
   fromPizzas.getPizzasLoaded
 );
+
 export const getPizzasLoading = createSelector(
   getPizzaState,
   fromPizzas.getPizzasLoading
