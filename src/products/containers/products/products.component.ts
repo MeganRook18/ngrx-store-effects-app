@@ -5,8 +5,19 @@ import { Observable } from "rxjs/Observable";
 import * as fromStore from "../../store";
 import { Pizza } from "../../models/pizza.model";
 
+/**
+ *  Through out this application we have disabled auto ChangeDetectionStrategy
+ *  This makes the angular application a lot faster when we're just relying on
+ *  the store and the object reference check to actually change.
+ *
+ *  We have no other local component state that needs to be detected
+ *  that there is a change as we're relying on the store actions & reducers 'pushing'
+ *  the local to our components. This is why we can use ChangeDetectionStrategy.OnPush
+ */
+
 @Component({
   selector: "products",
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["products.component.scss"],
   template: `
     <div class="products">
