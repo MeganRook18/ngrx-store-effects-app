@@ -26,16 +26,13 @@ export const getSelectedPizza = createSelector(
   }
 );
 
-export const getPizzaVisualized = createSelector(
+export const getPizzaVisualised = createSelector(
   getSelectedPizza,
   fromToppings.getToppingsEntities,
   fromToppings.getSelectedToppings,
-  (pizza, toppingsEntities, selectedToppings) => {
-    const toppings = selectedToppings.map((id) => toppingsEntities[id]);
-    return {
-      ...pizza,
-      toppings,
-    };
+  (pizza, toppingEntities, selectedToppings) => {
+    const toppings = selectedToppings.map((id) => toppingEntities[id]);
+    return { ...pizza, toppings };
   }
 );
 
@@ -58,7 +55,7 @@ export const getPizzasLoading = createSelector(
   
   const state = {
       products: {
-          pizzas: { <--  the pizza reducer handdles this part of the tree
+          pizzas: { <--  the pizza reducer handles this part of the tree
               data: [],
               loaded: false,
               loading: true

@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 
-import { Router } from "@angular/router";
-import { Actions, Effect } from "@ngrx/effects";
+import { Effect, Actions } from "@ngrx/effects";
+import * as RouterActions from "../actions/router.action";
 
 import { tap, map } from "rxjs/operators";
 
-import * as RouterActions from "../actions/router.action";
-
+// not dispatching an action here, we are handling the side effect of navigating
 @Injectable()
 export class RouterEffects {
   constructor(
@@ -16,7 +16,6 @@ export class RouterEffects {
     private location: Location
   ) {}
 
-  // not dispatching an action here, we are handling the side effect of navigating
   @Effect({ dispatch: false })
   navigate$ = this.actions$.ofType(RouterActions.GO).pipe(
     map((action: RouterActions.Go) => action.payload),

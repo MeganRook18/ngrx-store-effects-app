@@ -1,6 +1,5 @@
 import * as fromToppings from "../actions/toppings.actions";
 import { Topping } from "../../models/topping.model";
-import { state } from "@angular/core/src/animation/dsl";
 
 export interface ToppingsState {
   entities: { [id: number]: Topping };
@@ -18,12 +17,12 @@ export const initialState: ToppingsState = {
 
 export function reducer(
   state = initialState,
-  action: fromToppings.ToppingActions
+  action: fromToppings.ToppingsAction
 ): ToppingsState {
   switch (action.type) {
-    case fromToppings.VISUALIZE_TOPPINGS: {
-      // will return array of ids
+    case fromToppings.VISUALISE_TOPPINGS: {
       const selectedToppings = action.payload;
+
       return {
         ...state,
         selectedToppings,
@@ -39,6 +38,7 @@ export function reducer(
 
     case fromToppings.LOAD_TOPPINGS_SUCCESS: {
       const toppings = action.payload;
+
       const entities = toppings.reduce(
         (entities: { [id: number]: Topping }, topping: Topping) => {
           return {
@@ -53,8 +53,8 @@ export function reducer(
 
       return {
         ...state,
+        loaded: true,
         loading: false,
-        loaded: false,
         entities,
       };
     }
@@ -62,8 +62,8 @@ export function reducer(
     case fromToppings.LOAD_TOPPINGS_FAIL: {
       return {
         ...state,
-        loading: false,
         loaded: false,
+        loading: false,
       };
     }
   }
@@ -71,8 +71,8 @@ export function reducer(
   return state;
 }
 
-export const getToppingsEntities = (state: ToppingsState) => state.entities;
-export const getToppingsLoading = (state: ToppingsState) => state.loading;
+export const getToppingEntities = (state: ToppingsState) => state.entities;
 export const getToppingsLoaded = (state: ToppingsState) => state.loaded;
+export const getToppingsLoading = (state: ToppingsState) => state.loading;
 export const getSelectedToppings = (state: ToppingsState) =>
   state.selectedToppings;

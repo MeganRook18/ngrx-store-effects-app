@@ -15,7 +15,7 @@ export const getToppingsState = createSelector(
 // simple reference to our entities, then use this reference to return array
 export const getToppingsEntities = createSelector(
   getToppingsState,
-  fromToppings.getToppingsEntities
+  fromToppings.getToppingEntities
 );
 
 export const getSelectedToppings = createSelector(
