@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 
 import { Store } from "@ngrx/store";
 import { Observable } from "rxjs/Observable";
+import { tap } from "rxjs/operators";
 
 import * as fromStore from "../../store";
 import { Pizza } from "../../models/pizza.model";
@@ -14,29 +15,43 @@ import { Topping } from "../../models/topping.model";
     <div class="product-item">
       <pizza-form
         [pizza]="pizza$ | async"
-        [toppings]="toppings"
+        [toppings]="toppings$ | async"
         (selected)="onSelect($event)"
         (create)="onCreate($event)"
         (update)="onUpdate($event)"
         (remove)="onRemove($event)"
       >
-        <pizza-display [pizza]="visualise"> </pizza-display>
+        <pizza-display [pizza]="visualise$ | async"> </pizza-display>
       </pizza-form>
     </div>
   `,
 })
 export class ProductItemComponent implements OnInit {
   pizza$: Observable<Pizza>;
-  visualise: Pizza;
-  toppings: Topping[];
+  visualise$: Observable<Pizza>;
+  toppings$: Observable<Topping[]>;
 
   constructor(private store: Store<fromStore.ProductsState>) {}
 
   ngOnInit() {
-    this.pizza$ = this.store.select(fromStore.getSelectedPizza);
+    this.pizza$ = this.store.select(fromStore.getSelectedPizza).pipe(
+      // tap operator allow us to essentially step out of an Observable stream
+      // any thing inside of the tap() will not get returned or mutate into the stream
+      tap((pizza: Pizza = null) => {
+        const pizzaExist = !!(pizza && pizza.toppings);
+        const toppings = pizzaExist
+          ? pizza.toppings.map((topping) => topping.id) // get all the toppings IDs
+          : [];
+        this.store.dispatch(new fromStore.VisualizeToppings(toppings));
+      })
+    );
+    this.toppings$ = this.store.select(fromStore.getAllToppings);
+    this.visualise$ = this.store.select(fromStore.getPizzaVisualized);
   }
 
-  onSelect(event: number[]) {}
+  onSelect(event: number[]) {
+    this.store.dispatch(new fromStore.VisualizeToppings(event));
+  }
 
   onCreate(event: Pizza) {}
 

@@ -3,7 +3,7 @@ import { Pizza } from "src/products/models/pizza.model";
 
 export interface PizzaState {
   // data: Pizza[]; // in a bigger app this is not going to scale well
-  entities: { [id: number]: Pizza };
+  entities: { [id: number]: Pizza }; // entities is more scalable
   loaded: boolean;
   loading: boolean;
 }
